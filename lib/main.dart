@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:todolist_app/view/screen/screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,9 +30,31 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: .fromSeed(
+          seedColor: Color(0xFF9AA8FF),
+          primary: Color(0xFF9AA8FF),
+          secondary: Color(0xFF669DFF),
+          surface: Color(0xFF060E20),
+          tertiary: Color(0xFFFFADE6),
+          surfaceContainer: Color(0xFF0F1930),
+          surfaceContainerLow: Color(0xFF091328),
+          surfaceContainerHigh: Color(0xFF141F38),
+          surfaceContainerHighest: Color(0xFF192540),
+          errorContainer: Color(0xFFFF6E83)
+        ),
+        textTheme: TextTheme(
+          titleLarge: GoogleFonts.manrope(
+            color: Colors.white,
+          ),
+          bodyLarge: GoogleFonts.inter(
+            color: Colors.grey
+          ),
+          bodyMedium: GoogleFonts.inter(
+            color: Colors.grey,
+          )
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: RegisterScreen(),
     );
   }
 }
