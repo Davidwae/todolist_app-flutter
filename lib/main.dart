@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:todolist_app/view/screen/screen.dart';
+import 'package:todolist_app/view_models/user_view_model.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final UserViewModel _userViewModel = UserViewModel();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -54,7 +61,16 @@ class MyApp extends StatelessWidget {
           )
         ),
       ),
-      home: RegisterScreen(),
+      home: ListenableBuilder(
+        listenable: _userViewModel,
+        builder: (context, child) {
+          if (_userViewModel.user != null) {
+            return HomeScreen();
+          } else {
+            return LoginScreen(userViewModel: _userViewModel);
+          }
+        }
+      )
     );
   }
 }

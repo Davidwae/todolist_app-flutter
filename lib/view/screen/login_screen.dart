@@ -1,7 +1,16 @@
 part of 'screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  final UserViewModel userViewModel;
+  const LoginScreen({super.key, required this.userViewModel});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +83,8 @@ class LoginScreen extends StatelessWidget {
                               ),
                               prefixIcon: Icon(Icons.email),
                               hintText: "Email Address",
-                            )
+                            ),
+                            controller: emailController,
                           ),
                           SizedBox(height: 32,),
                           Row(
@@ -99,14 +109,34 @@ class LoginScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
                               prefixIcon: Icon(Icons.lock_outline),
-                              hintText: "Email Address",
+                              hintText: "password",
                               suffixIcon: Icon(Icons.remove_red_eye_outlined),
                             ),
                             obscureText: true,
                             style: Theme.of(context).textTheme.bodyLarge,
+                            controller: passwordController,
                           ),
                           SizedBox(height: 32,),
-                          PrimaryButtonWidget(text: "Login",),
+                          PrimaryButtonWidget(
+                            text: "Login",
+                            onPressed: () async {
+                              bool login = await widget.userViewModel.login(
+                                emailController.text,
+                                passwordController.text
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(widget.userViewModel.message.toString()))
+                              );
+                              if (login == true) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeScreen()
+                                  )
+                                );
+                              }
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -120,11 +150,22 @@ class LoginScreen extends StatelessWidget {
                       "Don't have an account?",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    Text(
-                      "Sign Up",
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
+                    SizedBox(width: 8,),
+                    GestureDetector(
+                      child: Text(
+                        "Sign Up",
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen(userViewModel: widget.userViewModel,)
+                          )
+                        );
+                      },
                     )
                   ],
                 )

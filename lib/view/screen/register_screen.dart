@@ -1,10 +1,23 @@
 part of 'screen.dart';
 
-class RegisterScreen extends StatelessWidget {
-  RegisterScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  final UserViewModel userViewModel;
+  const RegisterScreen({super.key, required this.userViewModel});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final nameController = TextEditingController();
+
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -37,13 +50,14 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 8,),
                       TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            ),
-                            prefixIcon: Icon(Icons.person_2_outlined),
-                            hintText: "Architect Name",
-                          )
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          prefixIcon: Icon(Icons.person_2_outlined),
+                          hintText: "Architect Name",
+                        ),
+                        controller: nameController,
                       ),
                       SizedBox(height: 32,),
                       Text(
@@ -52,13 +66,14 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 8,),
                       TextFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                            ),
-                            prefixIcon: Icon(Icons.email),
-                            hintText: "Email Address",
-                          )
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          prefixIcon: Icon(Icons.email),
+                          hintText: "Email Address",
+                        ),
+                        controller: emailController,
                       ),
                       SizedBox(height: 32,),
                       Text(
@@ -77,6 +92,7 @@ class RegisterScreen extends StatelessWidget {
                         ),
                         obscureText: true,
                         style: Theme.of(context).textTheme.bodyLarge,
+                        controller: passwordController,
                       ),
                       SizedBox(height: 32,),
                       RichText(
@@ -109,7 +125,19 @@ class RegisterScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 32,),
-                      PrimaryButtonWidget(text: "Sign Up",),
+                      PrimaryButtonWidget(
+                        text: "Sign Up",
+                        onPressed: () {
+                          widget.userViewModel.register(
+                            nameController.text,
+                            emailController.text,
+                            passwordController.text
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(widget.userViewModel.message.toString()))
+                          );
+                        },
+                      ),
                       SizedBox(height: 32,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -119,11 +147,21 @@ class RegisterScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           SizedBox(width: 8,),
-                          Text(
-                            "Sign Up",
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
+                          GestureDetector(
+                            child: Text(
+                              "LoginLars",
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                             ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(userViewModel: widget.userViewModel,)
+                                )
+                              );
+                            }
                           )
                         ],
                       )
